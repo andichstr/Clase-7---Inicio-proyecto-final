@@ -27,70 +27,41 @@
 export default {
     data() {
         return {
-            productos: [],
-            cantidadTotal: 0,
             desplegado: false,
-            precioTotal: 0,
             imagen: "cerrar.png",
         };
     },
-    computed:{
-        sumarCantidadTotal: function () {
-            return this.cantidadTotal + 1;
-        },
+    props:{
+        productos:{
+            type: Array,
+            required: true,
+        }
     },
-    methods: {
-        AgregarProducto(producto) {
-            //TODO: Sumar productos iguales
-            this.cantidadTotal += 1;
-            let result = this.productos.find((prod) => {
-                return prod.id == producto.id;
+    computed:{
+        cantidadTotal() {
+            let cantidadTotal = 0;
+            this.productos.forEach(element => {
+                cantidadTotal = cantidadTotal + element.cantidad;
             });
-            if (result) {
-                if (result.cantidad) result.cantidad += 1;
-                else result.cantidad = 1;
-            } else {
-                producto.cantidad = 1;
-                this.productos.push(producto);
-            }
-            console.log(`Producto "${producto.nombre}" agregado!`);
-            this.calcularPrecioTotal();
+            return cantidadTotal;
         },
-        desplegarCarrito() {
-            this.desplegado = !this.desplegado;
-        },
-        calcularPrecioTotal() {
+        precioTotal() {
             let precioTotal = 0;
             this.productos.forEach(element => {
                 precioTotal = precioTotal + (element.precio * element.cantidad);
             });
-            this.precioTotal = precioTotal;
+            return precioTotal;
+        },
+    },
+    methods: {
+        desplegarCarrito() {
+            this.desplegado = !this.desplegado;
         },
         getCerrarUrl() {
             return require(`@/assets/images/${this.imagen}`);
         },
         restarProducto(producto){
-            this.cantidadTotal -= 1;
-            let result = this.productos.find((prod) => {
-                return prod.id == producto.id;
-            });
-            let i = this.productos.indexOf(result);
-            if (result) {
-                if (result.cantidad > 0) {
-                    result.cantidad -= 1;
-                    console.log(`Producto "${producto.nombre}" restado!`);
-                    if (result.cantidad == 0){
-                        this.productos.splice(i,1);
-                    }
-                }
-                else{
-                    result.cantidad = 0;
-                    console.error("La cantidad del producto que se quería restar, era 0 o menor.")
-                }
-            } else {
-                console.log("?")
-            }
-            this.calcularPrecioTotal();
+            this.$emit("restar-del-carrito", producto);
         },
     },
 }

@@ -1,26 +1,27 @@
 <template>
   <div class="grillaProducto">
         <img
-            v-if="favorito"
+            v-if="producto.favorito"
             src="@/assets/images/star.png"
             alt="favorito"
             class="favorito"
             @click="cambiarFav()"
         />
         <img
-            v-if="!favorito"
+            v-if="!producto.favorito"
             src="@/assets/images/graystar2.png"
             alt="favorito"
             class="favorito"
             @click="cambiarFav()"
         />
         <img
-            :alt="nombre"
+            :alt="producto.nombre"
             :src="getImgUrl()"
             class="imgGrilla"
         />
-        <h4>{{ nombre }}</h4>
-        <div>$ {{ precio }}</div>
+        <h4>{{ producto.nombre }}</h4>
+        <div>Stock: {{ producto.cantidad }}</div>
+        <div>$ {{ producto.precio }}</div>
         <button
         class="botonAgregarCarrito"
         @click="AgregarAlCarrito()">
@@ -32,35 +33,20 @@
 <script>
 export default {
     props:{
-        id:{
-            type: Number,
-            required: true,
+        producto: {
+            type: Object,
+            required: true
         },
-        nombre:{
-            type: String,
-            required: true,
-        },
-        precio:{
-            type: Number,
-            required: true,
-        },
-        imagen:{
-            type: String,
-            required: true,
-        },
-        favorito:{
-            type: Boolean,
-        }
     },
     methods: {
         getImgUrl() {
-            return require(`@/assets/images/${this.imagen}`);
+            return require(`@/assets/images/${this.producto.imagen}`);
         },
         AgregarAlCarrito() {
-            this.$emit("agregar-al-carrito", this.id);
+            this.$emit("agregar-al-carrito", this.producto);
         },
         cambiarFav() {
-            this.favorito = !this.favorito;
+            this.$emit("cambiar-fav", this.producto.id);
         }
     },
 
