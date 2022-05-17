@@ -7,9 +7,22 @@
             <img :src="getCerrarUrl()" alt="Cerrar" class="cerrar" @click="desplegarCarrito()">
             <h2>Tu carrito</h2>
             <div v-if="productos.length != 0">
-                <div v-for="(item) in productos" :key="item.id" class="productoCarrito">
-                    <p v-show="item.cantidad !=0 "> * {{ item.cantidad }} {{ item.nombre }} - $ {{ item.precio * item.cantidad }}</p>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="tituloTabla col-2" scope="col">Cantidad</th>
+                            <th class="tituloTabla col-5" scope="col">Descripción</th>
+                            <th class="tituloTabla col-5" scope="col">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item) in productos" :key="item.id">
+                            <td class="col-2">{{ item.cantidad }}</td>
+                            <td class="col-5">{{ item.nombre }}</td>
+                            <td class="col-5">$ {{ item.precio * item.cantidad }}</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <h4>Total: $ {{ precioTotal }}</h4>
                 <div class="finalizarCompraDiv">
                     <button class="finalizarCompraButton">Finalizar Compra</button>

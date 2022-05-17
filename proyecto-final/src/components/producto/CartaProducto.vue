@@ -23,7 +23,7 @@
         <div>Stock: {{ producto.cantidad }}</div>
         <div>$ {{ producto.precio }}</div>
         <ContadorProducto :stock="producto.cantidad" @mi-contador="miContador" @sumar-stock="sumarStock" @restar-stock="restarStock"/>
-        <input type="button" class="botonCambiarCarrito" @click="cambiarCarrito()" :value="valorBotonProducto"/>
+        <input type="button" :disabled="botonProductoDeshabilitado" class="botonCambiarCarrito" @click="cambiarCarrito()" :value="valorBotonProducto"/>
   </div>
 </template>
 
@@ -34,9 +34,10 @@ export default {
     components:{ ContadorProducto },
     data() {
         return {
-            valorBotonProducto: "En carrito",
+            valorBotonProducto: "Sin seleccionar",
             contador: 0,
             contadorCarrito: 0,
+            botonProductoDeshabilitado: true,
         }
     },
     props:{
@@ -52,7 +53,13 @@ export default {
         cambiarCarrito() {
             this.$emit("cambiar-carrito", this.producto.id, this.contador);
             this.contadorCarrito = this.contador;
-            this.valorBotonProducto = "En carrito";
+            if (this.contador != 0) {
+                this.valorBotonProducto = "En carrito";
+                this.botonProductoDeshabilitado = true;
+            } else {
+                this.valorBotonProducto = "Sin seleccionar";
+                this.botonProductoDeshabilitado = true;
+            }
         },
         cambiarFav() {
             this.$emit("cambiar-fav", this.producto.id);
@@ -70,11 +77,19 @@ export default {
     watch: {
         contador(val){
             if (val == this.contadorCarrito){
+                if (this.contadorCarrito != 0){
                 this.valorBotonProducto = "En carrito";
+                this.botonProductoDeshabilitado = true;
+                }else{
+                    this.valorBotonProducto = "Sin seleccionar";
+                    this.botonProductoDeshabilitado = true;
+                }
             } else if (val < this.contadorCarrito){
                 this.valorBotonProducto = "Restar";
+                this.botonProductoDeshabilitado = false;
             } else {
                 this.valorBotonProducto = "Agregar";
+                this.botonProductoDeshabilitado = false;
             }
         }
     }
@@ -87,7 +102,7 @@ export default {
 .grillaProducto{
     position: relative;
     width: 300px;
-    height: 300px;
+    max-height: 380px;
     box-shadow: 0 0 10px rgba(45, 75, 100, 0.7);
     background-color: rgba(149, 184, 214, 0.7);
     color: black;
@@ -117,7 +132,7 @@ export default {
 
 .botonCambiarCarrito {
     background-color: #01d9ffd7;
-    width: 100px;
+    width: 130px;
     border-radius: 10px;
     margin-top: 10px;
     font-size: 1.1em;
