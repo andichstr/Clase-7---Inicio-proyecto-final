@@ -9,7 +9,6 @@
             <div v-if="productos.length != 0">
                 <div v-for="(item) in productos" :key="item.id" class="productoCarrito">
                     <p v-show="item.cantidad !=0 "> * {{ item.cantidad }} {{ item.nombre }} - $ {{ item.precio * item.cantidad }}</p>
-                    <button v-show="item.cantidad !=0" class="btn inline restarButton" @click="restarProducto(item)">-</button>
                 </div>
                 <h4>Total: $ {{ precioTotal }}</h4>
                 <div class="finalizarCompraDiv">
@@ -59,9 +58,6 @@ export default {
         },
         getCerrarUrl() {
             return require(`@/assets/images/${this.imagen}`);
-        },
-        restarProducto(producto){
-            this.$emit("restar-del-carrito", producto);
         },
     },
 }

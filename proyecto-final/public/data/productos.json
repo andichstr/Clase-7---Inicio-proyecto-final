@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "nombre": "Milanesa Napolitana",
+        "precio": 990,
+        "imagen": "mila-napo.png",
+        "favorito": false,
+        "cantidad": 5
+    },
+    {
+        "id": 2,
+        "nombre": "Hamburguesa Completa",
+        "precio": 950,
+        "imagen": "hamburguesa.jpg",
+        "favorito": true,
+        "cantidad": 8
+    },
+    {
+        "id": 3,
+        "nombre": "Picada Especial",
+        "precio": 1980,
+        "imagen": "picada.jpg",
+        "favorito": false,
+        "cantidad": 3
+    }
+]

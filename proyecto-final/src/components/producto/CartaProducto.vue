@@ -22,16 +22,23 @@
         <h4>{{ producto.nombre }}</h4>
         <div>Stock: {{ producto.cantidad }}</div>
         <div>$ {{ producto.precio }}</div>
-        <button
-        class="botonAgregarCarrito"
-        @click="AgregarAlCarrito()">
-        Agregar
-        </button>
+        <ContadorProducto :stock="producto.cantidad" @mi-contador="miContador" @sumar-stock="sumarStock" @restar-stock="restarStock"/>
+        <input type="button" class="botonCambiarCarrito" @click="cambiarCarrito()" :value="valorBotonProducto"/>
   </div>
 </template>
 
 <script>
+import ContadorProducto from './ContadorProducto.vue';
+
 export default {
+    components:{ ContadorProducto },
+    data() {
+        return {
+            valorBotonProducto: "En carrito",
+            contador: 0,
+            contadorCarrito: 0,
+        }
+    },
     props:{
         producto: {
             type: Object,
@@ -42,13 +49,35 @@ export default {
         getImgUrl() {
             return require(`@/assets/images/${this.producto.imagen}`);
         },
-        AgregarAlCarrito() {
-            this.$emit("agregar-al-carrito", this.producto);
+        cambiarCarrito() {
+            this.$emit("cambiar-carrito", this.producto.id, this.contador);
+            this.contadorCarrito = this.contador;
+            this.valorBotonProducto = "En carrito";
         },
         cambiarFav() {
             this.$emit("cambiar-fav", this.producto.id);
+        },
+        sumarStock(){
+            this.$emit('sumar-stock-producto', this.producto.id)
+        },
+        restarStock(){
+            this.$emit('restar-stock-producto', this.producto.id)
+        },
+        miContador(cont){
+            this.contador = cont;
         }
     },
+    watch: {
+        contador(val){
+            if (val == this.contadorCarrito){
+                this.valorBotonProducto = "En carrito";
+            } else if (val < this.contadorCarrito){
+                this.valorBotonProducto = "Restar";
+            } else {
+                this.valorBotonProducto = "Agregar";
+            }
+        }
+    }
 
 }
 </script>
@@ -86,7 +115,7 @@ export default {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
 }
 
-.botonAgregarCarrito {
+.botonCambiarCarrito {
     background-color: #01d9ffd7;
     width: 100px;
     border-radius: 10px;
